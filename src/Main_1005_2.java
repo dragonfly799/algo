@@ -1,3 +1,4 @@
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -7,7 +8,7 @@ import java.io.StreamTokenizer;
  * Куча камней
  * http://acm.timus.ru/problem.aspx?space=1&num=1005
  */
-public class Main_1005 {
+public class Main_1005_2 {
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -15,28 +16,11 @@ public class Main_1005 {
 
 		int[] stones = readArray(count, new StreamTokenizer(reader));
 
-		int fullSum = 0;
-		for (int i = 0; i < count; i++) {
-			fullSum += stones[i];
-		}
-
-		int minDiff = fullSum;
-		for (int i = 0; i < 1 << count - 1; i++) {
-			minDiff = Math.min(minDiff, diff(stones, i, fullSum));
-		}
+		int minDiff = new Diff(stones).minDiff(0, 0, 0);
 
 		System.out.println(minDiff);
 	}
 
-	private static int diff(int[] array, int bitmask, int fullSum) {
-		int sum = 0;
-		for (int i = 0; i < array.length - 1; i++) {
-			if ((bitmask & (1 << i)) != 0) {
-				sum += array[i];
-			}
-		}
-		return Math.abs(fullSum - sum * 2);
-	}
 	private static int readInt(StreamTokenizer tokenizer) throws IOException {
 		tokenizer.nextToken();
 		return (int) tokenizer.nval;
@@ -50,4 +34,27 @@ public class Main_1005 {
 		return result;
 	}
 
+	private static class Diff {
+		int[] array;
+		int fullSum;
+
+		private Diff(int[] array) {
+			this.array = array;
+			this.fullSum = 0;
+			for (int el : array) {
+				fullSum += el;
+			}
+		}
+
+		private int minDiff(int current, int firstPileSum, int firstPileSize) {
+			if (current == array.length || firstPileSize * 2 > array.length) {
+				return Math.abs(firstPileSum - (fullSum - firstPileSum));
+			} else {
+				return Math.min(
+						minDiff(current + 1, firstPileSum, firstPileSize),
+						minDiff(current + 1, firstPileSum + array[current], firstPileSize + 1)
+				);
+			}
+		}
+	}
 }
