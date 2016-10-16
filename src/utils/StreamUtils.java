@@ -5,7 +5,7 @@ import java.io.StreamTokenizer;
 
 public class StreamUtils {
 
-	private static int readInt(StreamTokenizer tokenizer) throws IOException {
+	public static int readInt(StreamTokenizer tokenizer) throws IOException {
 		tokenizer.nextToken();
 		return (int) tokenizer.nval;
 	}

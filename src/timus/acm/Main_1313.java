@@ -1,3 +1,5 @@
+package timus.acm;
+
 import utils.StreamUtils;
 
 import java.io.BufferedReader;
