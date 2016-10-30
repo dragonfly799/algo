@@ -6,34 +6,27 @@ import java.io.InputStreamReader;
 import java.io.StreamTokenizer;
 import java.util.Arrays;
 
-public class Main_432A {
+public class Main_149A {
 
 	public static void main(String[] args) throws IOException {
 		StreamTokenizer tokenizer = new StreamTokenizer(new BufferedReader(new InputStreamReader(System.in)));
-		int n = readInt(tokenizer);
 		int k = readInt(tokenizer);
+		int[] months = readArray(12, tokenizer);
+		if (k == 0) {
+			System.out.println(0);
+			return;
+		}
 
-		int[] students = readArray(n, tokenizer);
-		Arrays.sort(students);
-
-		System.out.println(search(students, n, 5 - k) / 3);
-	}
-
-	private static int search(int[] array, int size, int maxValue) {
-		int left = 0;
-		int right = size - 1;
-		while (left <= right) {
-			int i = (left + right) / 2;
-			if (array[i] <= maxValue && (i == size - 1 || array[i + 1] > maxValue)) {
-				return i + 1;
-			}
-			if (array[i] > maxValue) {
-				right = i - 1;
-			} else {
-				left = i + 1;
+		Arrays.sort(months);
+		int sum = 0;
+		for (int i = 11; i >= 0; i--) {
+			sum += months[i];
+			if (sum >= k) {
+				System.out.println(12 - i);
+				return;
 			}
 		}
-		return 0;
+		System.out.println(-1);
 	}
 
 	public static int readInt(StreamTokenizer tokenizer) throws IOException {
