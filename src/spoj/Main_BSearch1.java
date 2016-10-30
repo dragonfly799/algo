@@ -24,7 +24,7 @@ public class Main_BSearch1 {
 		int leftBound = 0;
 		int rightBound = array.length - 1;
 
-		while (true) {
+		while (leftBound <= rightBound) {
 			int i = (leftBound + rightBound) / 2;
 
 			if (array[i] == target && (i == 0 || array[i - 1] != target)) {
@@ -36,10 +36,8 @@ public class Main_BSearch1 {
 			} else {
 				leftBound = i + 1;
 			}
-			if (leftBound > rightBound) {
-				return -1;
-			}
 		}
+		return -1;
 	}
 
 	public static int readInt(StreamTokenizer tokenizer) throws IOException {
