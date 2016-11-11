@@ -1,24 +1,21 @@
 package codeforces;
 
 import java.io.*;
-import java.util.Arrays;
+import java.util.Random;
 
 public class Main_439B {
 
-    public static void main(String[] args) throws IOException {
-        long before = System.currentTimeMillis();
-//        for (int i = 0; i < 100000; i++) {
-//            System.out.print("100000 ");
-//        }
+    private static Random random = new Random();
 
-        InputStream input = Main_439B.class.getResourceAsStream("/input");
-        StreamTokenizer tokenizer = new StreamTokenizer(new BufferedReader(new InputStreamReader(input)));
+    public static void main(String[] args) throws IOException {
+        System.setIn(Main_439B.class.getResourceAsStream("/input"));
+        StreamTokenizer tokenizer = new StreamTokenizer(new BufferedReader(new InputStreamReader(System.in)));
 
         int n = readInt(tokenizer);
         int x = readInt(tokenizer);
         int[] array = readArray(n, tokenizer);
 
-        Arrays.sort(array);
+        quickSort(array, 0, n - 1);
 
         long hours = 0;
         for (int i = 0; i < n; i++) {
@@ -29,9 +26,42 @@ public class Main_439B {
         }
 
         System.out.println(hours);
-        System.out.println("Main_439B.main time: " + (System.currentTimeMillis() - before) + " ms");
     }
 
+    public static void quickSort(int[] array, int start, int end) {
+
+        int left = start;
+        int right = end;
+        int pivot = array[calculatePivot(start, end)];
+
+        while (left <= right) {
+            while (array[left] < pivot) {
+                left++;
+            }
+            while (array[right] > pivot) {
+                right--;
+            }
+            if (left <= right) {
+                int tmp = array[left];
+                array[left] = array[right];
+                array[right] = tmp;
+                left++;
+                right--;
+            }
+        }
+
+        if (start < right) {
+            quickSort(array, start, right);
+        }
+        if (end > left) {
+            quickSort(array, left, end);
+        }
+    }
+
+    private static int calculatePivot(int start, int end) {
+//        return (start + end) / 2;
+        return random.nextInt(end - start + 1) + start;
+    }
 
     public static int readInt(StreamTokenizer tokenizer) throws IOException {
         tokenizer.nextToken();
