@@ -4,146 +4,126 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StreamTokenizer;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 public class Main_1019_Scan {
 
-	public static void main(String[] args) throws IOException {
-		StreamTokenizer tokenizer = new StreamTokenizer(new BufferedReader(new InputStreamReader(System.in)));
-		int n = readInt(tokenizer);
+    public static void main(String[] args) throws IOException {
+        StreamTokenizer tokenizer = new StreamTokenizer(new BufferedReader(new InputStreamReader(System.in)));
+        int n = readInt(tokenizer);
 
-		List<Point> points = new ArrayList<>();
-		Interval interval = new Interval(0, true);
-		points.add(new Point(0, true, interval));
-		points.add(new Point(1000000000, false, interval));
+        Point[] points = new Point[n * 2 + 2];
+        Interval interval = new Interval(0, true);
+        points[0] = new Point(0, true, interval);
+        points[n * 2 + 1] = new Point(1000000000, false, interval);
 
-		for (int i = 1; i <= n; i++) {
-			int a = readInt(tokenizer);
-			int b = readInt(tokenizer);
-			boolean white = readString(tokenizer).equals("w");
+        for (int i = 1; i <= n; i++) {
+            int a = readInt(tokenizer);
+            int b = readInt(tokenizer);
+            boolean white = readString(tokenizer).equals("w");
 
-			interval = new Interval(i, white);
-			Point start = new Point(a, true, interval);
-			Point end = new Point(b, false, interval);
-			points.add(searchPosition(points, start), start);
-			points.add(searchPosition(points, end), end);
-		}
+            interval = new Interval(i, white);
+            points[i * 2 - 1] = new Point(a, true, interval);
+            points[i * 2] = new Point(b, false, interval);
+        }
+        Arrays.sort(points);
 
-		SortedSet<Interval> currentIntervals = new TreeSet<>();
-		int start = 0;
-		int end = 0;
-		int maxLength = 0;
+        SortedSet<Interval> currentIntervals = new TreeSet<>();
+        int start = 0;
+        int end = 0;
+        int maxLength = 0;
 
-		int currStart = 0;
-		int currEnd = 0;
-		boolean white = true;
+        int currStart = 0;
+        int currEnd = 0;
+        int p = 0;
+        boolean currentIsWhite = true;
 
-		Iterator<Point> iterator = points.iterator();
-		Point point = iterator.next();
+        int i = 0;
+        while (i < points.length) {
+            while (i < points.length && points[i].point == p) {
+                if (points[i].start) {
+                    currentIntervals.add(points[i].interval);
+                } else {
+                    currentIntervals.remove(points[i].interval);
+                }
+                i++;
+            }
 
-		while (iterator.hasNext()) {
-			int p = point.point;
-			while (point.point == p) {
-				if (point.start) {
-					currentIntervals.add(point.interval);
-				} else {
-					currentIntervals.remove(point.interval);
-				}
-				if (!iterator.hasNext()) {
-					break;
-				}
-				point = iterator.next();
-			}
+            boolean nextIsWhite = !currentIntervals.isEmpty() && currentIntervals.last().white;
+            if (currentIsWhite != nextIsWhite) {
+                if (currentIsWhite) {
+                    currEnd = p;
+                    if (currEnd - currStart > maxLength) {
+                        maxLength = currEnd - currStart;
+                        start = currStart;
+                        end = currEnd;
+                    }
+                } else {
+                    currStart = p;
+                }
+                currentIsWhite = nextIsWhite;
+            }
 
-			boolean lastWhite = currentIntervals.isEmpty() || currentIntervals.last().white;
-			if (white != lastWhite) {
-				if (white) {
-					currEnd = p;
-					if (currEnd - currStart > maxLength) {
-						maxLength = currEnd - currStart;
-						start = currStart;
-						end = currEnd;
-					}
-				} else {
-					currStart = p;
-				}
-				white = lastWhite;
-			}
-		}
+            if (i < points.length) {
+                p = points[i].point;
+            }
+        }
 
-		System.out.println(start + " " + end);
-	}
+        System.out.println(start + " " + end);
+    }
 
-	private static int searchPosition(List<Point> points, Point target) {
-		int left = 0;
-		int right = points.size() - 1;
-		while (left <= right) {
-			int i = (left + right) / 2;
-			if (points.get(i).point >= target.point && (i == 0 || points.get(i - 1).point < target.point)) {
-				return i;
-			}
+    private static int readInt(StreamTokenizer tokenizer) throws IOException {
+        tokenizer.nextToken();
+        return (int) tokenizer.nval;
+    }
 
-			if (points.get(i).point >= target.point) {
-				right = i - 1;
-			} else {
-				left = i + 1;
-			}
-		}
+    private static String readString(StreamTokenizer tokenizer) throws IOException {
+        tokenizer.nextToken();
+        return tokenizer.sval;
+    }
 
-		return left;
-	}
+    private static class Point implements Comparable<Point> {
+        int point;
+        boolean start;
+        Interval interval;
 
-	private static int readInt(StreamTokenizer tokenizer) throws IOException {
-		tokenizer.nextToken();
-		return (int) tokenizer.nval;
-	}
+        private Point(int point, boolean start, Interval interval) {
+            this.point = point;
+            this.start = start;
+            this.interval = interval;
+        }
 
-	private static String readString(StreamTokenizer tokenizer) throws IOException {
-		tokenizer.nextToken();
-		return tokenizer.sval;
-	}
+        @Override
+        public String toString() {
+            return "[" + point + ", "
+                    + (start ? "start" : "end") + ", "
+                    + interval + "]";
+        }
 
-	private static class Point {
-		int point;
-		boolean start;
-		Interval interval;
+        @Override
+        public int compareTo(Point o) {
+            return point - o.point;
+        }
+    }
 
-		private Point(int point, boolean start, Interval interval) {
-			this.point = point;
-			this.start = start;
-			this.interval = interval;
-		}
+    private static class Interval implements Comparable<Interval> {
+        int intervalNumber;
+        boolean white;
 
-		@Override
-		public String toString() {
-			return "[" + point + ", "
-					+ (start ? "start" : "end") + ", "
-					+ interval + "]";
-		}
-	}
+        private Interval(int intervalNumber, boolean white) {
+            this.intervalNumber = intervalNumber;
+            this.white = white;
+        }
 
-	private static class Interval implements Comparable<Interval> {
-		int intervalNumber;
-		boolean white;
+        @Override
+        public int compareTo(Interval o) {
+            return intervalNumber - o.intervalNumber;
+        }
 
-		private Interval(int intervalNumber, boolean white) {
-			this.intervalNumber = intervalNumber;
-			this.white = white;
-		}
-
-		@Override
-		public int compareTo(Interval o) {
-			return intervalNumber - o.intervalNumber;
-		}
-
-		@Override
-		public String toString() {
-			return "{" + intervalNumber + ", "
-					+ (white ? "w" : "b") + "}";
-		}
-	}
+        @Override
+        public String toString() {
+            return "{" + intervalNumber + ", "
+                    + (white ? "w" : "b") + "}";
+        }
+    }
 }
