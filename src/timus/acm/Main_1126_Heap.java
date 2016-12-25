@@ -4,8 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Main_1126_Heap {
 
@@ -38,32 +36,33 @@ public class Main_1126_Heap {
 
 	private static class Heap {
 		private ArrayList<Integer> heap = new ArrayList<>();
-		private Map<Integer, Integer> indexToHeapPosition = new HashMap<>();
-		private Map<Integer, Integer> heapPositionToIndex = new HashMap<>();
+		private ArrayList<Integer> indexToHeapPosition = new ArrayList<>();
+		private ArrayList<Integer> heapPositionToIndex = new ArrayList<>();
 
-		{
+		public Heap() {
 			heap.add(0);
+			heapPositionToIndex.add(0);
 		}
 
 		public void add(int index, int value) {
 			heap.add(value);
 			int position = heap.size() - 1;
-			indexToHeapPosition.put(index, position);
-			heapPositionToIndex.put(position, index);
+			indexToHeapPosition.add(index, position);
+			heapPositionToIndex.add(position, index);
 			exchangeWithParentIfNeed(position);
 		}
 
 		public void remove(int index) {
-			Integer position = indexToHeapPosition.remove(index);
+			Integer position = indexToHeapPosition.get(index);
 			int lastPosition = heap.size() - 1;
 
 			Integer lastValue = heap.remove(lastPosition);
 			if (position != lastPosition) {
 				heap.set(position, lastValue);
 
-				Integer lastIndex = heapPositionToIndex.remove(lastPosition);
-				indexToHeapPosition.put(lastIndex, position);
-				heapPositionToIndex.put(position, lastIndex);
+				Integer lastIndex = heapPositionToIndex.get(lastPosition);
+				indexToHeapPosition.set(lastIndex, position);
+				heapPositionToIndex.set(position, lastIndex);
 
 				exchangeWithParentIfNeed(position);
 				exchangeWithChildrenIfNeed(position);
@@ -106,10 +105,10 @@ public class Main_1126_Heap {
 			heap.set(position2, value1);
 			Integer index1 = heapPositionToIndex.get(position1);
 			Integer index2 = heapPositionToIndex.get(position2);
-			indexToHeapPosition.put(index1, position2);
-			indexToHeapPosition.put(index2, position1);
-			heapPositionToIndex.put(position1, index2);
-			heapPositionToIndex.put(position2, index1);
+			indexToHeapPosition.set(index1, position2);
+			indexToHeapPosition.set(index2, position1);
+			heapPositionToIndex.set(position1, index2);
+			heapPositionToIndex.set(position2, index1);
 		}
 
 		public int top() {
