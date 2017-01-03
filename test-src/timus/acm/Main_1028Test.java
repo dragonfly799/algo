@@ -5,6 +5,7 @@ import org.testng.annotations.Test;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Random;
 
 import static org.testng.Assert.*;
 
@@ -12,6 +13,7 @@ import static org.testng.Assert.*;
 public class Main_1028Test {
 
 	private ByteArrayOutputStream out;
+	private Random random = new Random();
 
 	@BeforeMethod
 	public void setUp() {
@@ -61,15 +63,25 @@ public class Main_1028Test {
 		assertEquals(getOut(), new String[]{"1"});
 	}
 
-	public void test1() {
+	public void testTwoDiagonals() {
 		setIn(new String[]{"8 0", "6 1", "9 1", "4 2", "7 2", "2 3", "5 3", "0 4", "3 4", "1 5"});
 		run();
 		assertEquals(getOut(), new String[]{"5", "1", "4", "0", "0", "0", "0", "0", "0", "0"});
 	}
 
+	@Test(invocationCount = 100, timeOut = 250)
+	public void test() {
+		String[] input = new String[15000];
+		for (int i = 0; i < 15000; i++) {
+			input[i] = "" + random.nextInt(32001) + " " + i;
+		}
+		setIn(input);
+		run();
+	}
+
 	private void run() {
 		try {
-			Main_1028.main(new String[0]);
+			Main_1028_Intervals.main(new String[0]);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

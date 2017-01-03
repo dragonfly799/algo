@@ -1,8 +1,6 @@
 package timus.acm;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 
 public class Main_1028 {
@@ -22,9 +20,11 @@ public class Main_1028 {
 			starsByLevel[pos]++;
 		}
 
+		PrintWriter out = new PrintWriter(new OutputStreamWriter(System.out));
 		for (int i = 0; i < n; i++) {
-			System.out.println(starsByLevel[i]);
+			out.println(starsByLevel[i]);
 		}
+		out.flush();
 	}
 
 	private static int insert(ArrayList<Integer> list, int value) {
