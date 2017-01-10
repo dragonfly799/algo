@@ -14,7 +14,7 @@ public class Main_1037 {
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-		PrintStream out = System.out;
+		PrintWriter out = new PrintWriter(new OutputStreamWriter(System.out));
 
 		do {
 			String line = reader.readLine();
@@ -30,7 +30,7 @@ public class Main_1037 {
 				out.println(successful ? "+" : "-");
 			}
 		} while (reader.ready());
-
+		out.flush();
 	}
 
 	private static int allocate(int time) {
@@ -79,51 +79,25 @@ public class Main_1037 {
 	}
 
 	private static class FreeBlocks {
-		private SortedSet<Integer> blocks = new TreeSet<>();
+		private ArrayList<Integer> heap = new ArrayList<>(SIZE + 1);
 
-		public FreeBlocks() {
-			for (int i = 1; i <= SIZE; i++) {
-				blocks.add(i);
+		private FreeBlocks() {
+			for (int i = 0; i <= SIZE; i++) {
+				heap.add(i);
 			}
-		}
-
-		public int allocate() {
-			Integer first = blocks.first();
-			blocks.remove(first);
-			return first;
-		}
-
-		public void free(int number) {
-			blocks.add(number);
-		}
-	}
-
-	private static class FreeBlocksHeap {
-		private int[] heap = new int[SIZE + 1];
-		private int lastPosition;
-
-		private FreeBlocksHeap() {
-			for (int i = 1; i <= SIZE; i++) {
-				heap[i] = i;
-			}
-			lastPosition = SIZE;
 		}
 
 		private void free(int blockNumber) {
-			lastPosition++;
-			heap[lastPosition] = blockNumber;
-			exchangeWithParentIfNeed(lastPosition);
+			heap.add(blockNumber);
+			exchangeWithParentIfNeed(heap.size() - 1);
 		}
 
 		private int allocate() {
-			if (lastPosition == 0) {
-				throw new IndexOutOfBoundsException("Heap is empty");
-			}
-			int allocated = heap[1];
-			Integer lastValue = heap[lastPosition];
-			lastPosition--;
+			int allocated = heap.get(1);
+			int lastPosition = heap.size() - 1;
+			Integer lastValue = heap.remove(lastPosition);
 			if (lastPosition > 1) {
-				heap[1] = lastValue;
+				heap.set(1, lastValue);
 				exchangeWithChildrenIfNeed(1);
 			}
 			return allocated;
@@ -132,8 +106,8 @@ public class Main_1037 {
 		private void exchangeWithParentIfNeed(int position) {
 			int parentPosition = position / 2;
 			if (parentPosition != 0) {
-				Integer value = heap[position];
-				Integer parentValue = heap[parentPosition];
+				Integer value = heap.get(position);
+				Integer parentValue = heap.get(parentPosition);
 				if (parentValue > value) {
 					exchange(position, parentPosition);
 					exchangeWithParentIfNeed(parentPosition);
@@ -144,14 +118,14 @@ public class Main_1037 {
 		private void exchangeWithChildrenIfNeed(int position) {
 			int leftChildPosition = position * 2;
 			int rightChildPosition = leftChildPosition + 1;
-			if (leftChildPosition <= lastPosition) {
+			if (leftChildPosition < heap.size()) {
 				int minChildPosition = leftChildPosition;
-				if (rightChildPosition <= lastPosition) {
-					if (heap[rightChildPosition] < heap[leftChildPosition]) {
+				if (rightChildPosition < heap.size()) {
+					if (heap.get(rightChildPosition) < heap.get(leftChildPosition)) {
 						minChildPosition = rightChildPosition;
 					}
 				}
-				if (heap[position] > heap[minChildPosition]) {
+				if (heap.get(position) > heap.get(minChildPosition)) {
 					exchange(position, minChildPosition);
 					exchangeWithChildrenIfNeed(minChildPosition);
 				}
@@ -159,10 +133,9 @@ public class Main_1037 {
 		}
 
 		private void exchange(int position1, int position2) {
-			Integer value1 = heap[position1];
-			Integer value2 = heap[position2];
-			heap[position1] = value2;
-			heap[position2] = value1;
+			Integer value = heap.get(position1);
+			heap.set(position1, heap.get(position2));
+			heap.set(position2, value);
 		}
 	}
 }
