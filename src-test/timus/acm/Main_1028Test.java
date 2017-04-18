@@ -24,19 +24,19 @@ public class Main_1028Test {
 	public void testHorizontalLine() {
 		setIn(new String[]{"1 1", "2 1", "3 1", "4 1", "5 1"});
 		run();
-		assertEquals(getOut(), new String[]{"1", "1", "1", "1", "1"});
+		assertEquals(getOut(), new String[]{"codeforces/round401/1", "codeforces/round401/1", "codeforces/round401/1", "codeforces/round401/1", "codeforces/round401/1"});
 	}
 
 	public void testVerticalLine() {
 		setIn(new String[]{"1 1", "1 2", "1 3", "1 4", "1 5"});
 		run();
-		assertEquals(getOut(), new String[]{"1", "1", "1", "1", "1"});
+		assertEquals(getOut(), new String[]{"codeforces/round401/1", "codeforces/round401/1", "codeforces/round401/1", "codeforces/round401/1", "codeforces/round401/1"});
 	}
 
 	public void testMainDiagonal() {
 		setIn(new String[]{"1 1", "2 2", "3 3", "4 4", "5 5"});
 		run();
-		assertEquals(getOut(), new String[]{"1", "1", "1", "1", "1"});
+		assertEquals(getOut(), new String[]{"codeforces/round401/1", "codeforces/round401/1", "codeforces/round401/1", "codeforces/round401/1", "codeforces/round401/1"});
 	}
 
 	public void testSecondaryDiagonal() {
@@ -48,7 +48,7 @@ public class Main_1028Test {
 	public void testSquareNine() {
 		setIn(new String[]{"0 0", "1 0", "2 0", "0 1", "1 1", "2 1", "0 2", "1 2", "2 2"});
 		run();
-		assertEquals(getOut(), new String[]{"1", "2", "2", "1", "0", "2", "0", "0", "1"});
+		assertEquals(getOut(), new String[]{"codeforces/round401/1", "2", "2", "codeforces/round401/1", "0", "2", "0", "0", "codeforces/round401/1"});
 	}
 
 	public void testRhombusFour() {
@@ -60,13 +60,13 @@ public class Main_1028Test {
 	public void testSinglePoint() {
 		setIn(new String[]{"0 0"});
 		run();
-		assertEquals(getOut(), new String[]{"1"});
+		assertEquals(getOut(), new String[]{"codeforces/round401/1"});
 	}
 
 	public void testTwoDiagonals() {
 		setIn(new String[]{"8 0", "6 1", "9 1", "4 2", "7 2", "2 3", "5 3", "0 4", "3 4", "1 5"});
 		run();
-		assertEquals(getOut(), new String[]{"5", "1", "4", "0", "0", "0", "0", "0", "0", "0"});
+		assertEquals(getOut(), new String[]{"5", "codeforces/round401/1", "4", "0", "0", "0", "0", "0", "0", "0"});
 	}
 
 	@Test(invocationCount = 100, timeOut = 250)
