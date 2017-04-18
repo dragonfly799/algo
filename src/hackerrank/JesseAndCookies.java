@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StreamTokenizer;
-import java.util.ArrayList;
 
 public class JesseAndCookies {
 
@@ -44,35 +43,36 @@ public class JesseAndCookies {
 	}
 
 	private static class Heap {
-
-		ArrayList<Integer> heap;
+		int[] heap;
+		int size;
 
 		public Heap(int n) {
-			heap = new ArrayList<>(n + 1);
-			heap.add(0);
+			heap = new int[n + 1];
+			size = 1;
 		}
 
 		public int size() {
-			return heap.size() - 1;
+			return size - 1;
 		}
 
 		public int top() {
-			return heap.get(1);
+			return heap[1];
 		}
 
 		public void add(int value) {
-			heap.add(value);
-			int position = heap.size() - 1;
-			exchangeWithParent(position);
+			heap[size] = value;
+			size++;
+			exchangeWithParent(size - 1);
 		}
 
 		public int removeTop() {
-			if (size() == 1) {
-				return heap.remove(1);
+			int result = heap[1];
+			size--;
+			if (size == 1) {
+				return result;
 			}
 
-			Integer lastElement = heap.remove(heap.size() - 1);
-			Integer result = heap.set(1, lastElement);
+			heap[1] = heap[size];
 			exchangeWithChildren(1);
 			return result;
 		}
@@ -80,13 +80,13 @@ public class JesseAndCookies {
 		private void exchangeWithChildren(int position) {
 			int leftChild = position * 2;
 			int rightChild = leftChild + 1;
-			if (leftChild < heap.size()) {
+			if (leftChild < size) {
 				int minChild = leftChild;
-				if (rightChild < heap.size() && heap.get(rightChild) < heap.get(leftChild)) {
+				if (rightChild < size && heap[rightChild] < heap[leftChild]) {
 					minChild = rightChild;
 				}
 
-				if (heap.get(position) > heap.get(minChild)) {
+				if (heap[position] > heap[minChild]) {
 					exchange(position, minChild);
 					exchangeWithChildren(minChild);
 				}
@@ -98,16 +98,16 @@ public class JesseAndCookies {
 				return;
 			}
 			int parent = position / 2;
-			if (heap.get(parent) > heap.get(position)) {
+			if (heap[parent] > heap[position]) {
 				exchange(parent, position);
 				exchangeWithParent(parent);
 			}
 		}
 
 		private void exchange(int position1, int position2) {
-			Integer value1 = heap.get(position1);
-			heap.set(position1, heap.get(position2));
-			heap.set(position2, value1);
+			int value1 = heap[position1];
+			heap[position1] = heap[position2];
+			heap[position2] = value1;
 		}
 
 	}
