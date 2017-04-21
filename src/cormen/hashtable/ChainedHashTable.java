@@ -2,10 +2,10 @@ package cormen.hashtable;
 
 import java.util.NoSuchElementException;
 
-public class ChainedHashTable<K, V> implements HashTable<K, V> {
+public class ChainedHashTable implements HashTable {
 
 	private int capacity;
-	private KeyChainElement<K, V>[] table;
+	private KeyChainElement[] table;
 
 	public ChainedHashTable() {
 		this(100);
@@ -17,20 +17,20 @@ public class ChainedHashTable<K, V> implements HashTable<K, V> {
 	}
 
 	@Override
-	public void put(K key, V value) {
-		int hash = hash(key);
-		KeyChainElement<K, V> element = new KeyChainElement<>(key, value);
-		KeyChainElement<K, V> next = table[hash];
+	public void put(int key, int value) {
+		int hash = hashCode(key);
+		KeyChainElement element = new KeyChainElement(key, value);
+		KeyChainElement next = table[hash];
 		table[hash] = element;
 		element.next = next;
 	}
 
 
 	@Override
-	public V get(K key) {
-		int hash = hash(key);
-		KeyChainElement<K, V> current = table[hash];
-		while (current != null && !current.key.equals(key)) {
+	public Integer get(int key) {
+		int hash = hashCode(key);
+		KeyChainElement current = table[hash];
+		while (current != null && current.key != key) {
 			current = current.next;
 		}
 		if (current == null) {
@@ -40,12 +40,12 @@ public class ChainedHashTable<K, V> implements HashTable<K, V> {
 	}
 
 	@Override
-	public void remove(K key) {
-		int hash = hash(key);
+	public void remove(int key) {
+		int hash = hashCode(key);
 
-		KeyChainElement<K, V> current = table[hash];
-		KeyChainElement<K, V> prev = null;
-		while (current != null && !current.key.equals(key)) {
+		KeyChainElement current = table[hash];
+		KeyChainElement prev = null;
+		while (current != null && current.key !=key) {
 			prev = current;
 			current = current.next;
 		}
@@ -59,17 +59,16 @@ public class ChainedHashTable<K, V> implements HashTable<K, V> {
 		}
 	}
 
-	private int hash(K key) {
-		int hashCode = key.hashCode();
-		return (hashCode >= 0) ? hashCode % capacity : -hashCode % capacity;
+	private int hashCode(int key) {
+		return (key >= 0) ? key % capacity : -key % capacity;
 	}
 
-	private static class KeyChainElement<K, V> {
-		K key;
-		V value;
-		KeyChainElement<K, V> next;
+	private static class KeyChainElement {
+		int key;
+		int value;
+		KeyChainElement next;
 
-		private KeyChainElement(K key, V value) {
+		private KeyChainElement(int key, int value) {
 			this.key = key;
 			this.value = value;
 		}

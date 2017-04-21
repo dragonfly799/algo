@@ -1,11 +1,11 @@
 package cormen.hashtable;
 
-public interface HashTable<K, V> {
+public interface HashTable {
 
-	void put(K key, V value);
+	void put(int key, int value);
 
-	V get(K key);
+	Integer get(int key);
 
-	void remove(K key);
+	void remove(int key);
 
 }

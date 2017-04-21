@@ -12,11 +12,11 @@ import static org.testng.Assert.*;
 @Test
 public class HashTableTest {
 
-	private HashTable<Integer, Integer> hashTable;
+	private HashTable hashTable;
 
 	@BeforeMethod
 	public void setUp() {
-		hashTable = new ChainedHashTable<>();
+		hashTable = new ChainedHashTable();
 	}
 
 	public void test() {
