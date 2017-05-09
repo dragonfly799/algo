@@ -7,7 +7,7 @@ public class SingleOpenAddressHashTable extends OpenAddressHashTable {
 	}
 
 	@Override
-	protected int hashCode(int key, int probe) {
-		return (h(key) + probe) % capacity;
+	protected int hashCode(long h, int probe) {
+		return (int) ((h + probe) % capacity);
 	}
 }

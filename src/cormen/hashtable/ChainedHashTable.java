@@ -4,25 +4,46 @@ import java.util.NoSuchElementException;
 
 public class ChainedHashTable implements HashTable {
 
-	private int capacity;
 	private KeyChainElement[] table;
+	private int capacity;
+	private int p;
 
-	public ChainedHashTable() {
-		this(100);
-	}
+	private long s = (int) (((Math.sqrt(5) - 1) / 2) * (1L << 32));
 
 	public ChainedHashTable(int capacity) {
-		this.capacity = capacity;
-		table = new KeyChainElement[capacity];
+		int p = 0;
+		while (1 << p < capacity) {
+			p++;
+		}
+		this.p = p;
+		this.capacity = 1 << p;
+		table = new KeyChainElement[this.capacity];
+	}
+
+	@Override
+	public int capacity() {
+		return capacity;
 	}
 
 	@Override
 	public void put(int key, int value) {
 		int hash = hashCode(key);
-		KeyChainElement element = new KeyChainElement(key, value);
-		KeyChainElement next = table[hash];
-		table[hash] = element;
-		element.next = next;
+		KeyChainElement current = table[hash];
+		KeyChainElement prev = null;
+		while (current != null && current.key != key) {
+			prev = current;
+			current = current.next;
+		}
+		if (current == null) {
+			KeyChainElement element = new KeyChainElement(key, value);
+			if (prev == null) {
+				table[hash] = element;
+			} else {
+				prev.next = element;
+			}
+		} else {
+			current.value = value;
+		}
 	}
 
 
@@ -45,7 +66,7 @@ public class ChainedHashTable implements HashTable {
 
 		KeyChainElement current = table[hash];
 		KeyChainElement prev = null;
-		while (current != null && current.key !=key) {
+		while (current != null && current.key != key) {
 			prev = current;
 			current = current.next;
 		}
@@ -60,7 +81,22 @@ public class ChainedHashTable implements HashTable {
 	}
 
 	private int hashCode(int key) {
-		return (key >= 0) ? key % capacity : -key % capacity;
+		int r0 = (int) ((key * s) & 0xffffffffL);
+		return r0 >>> (32 - p);
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder res = new StringBuilder(getClass().getSimpleName()).append("[");
+		for (int i = 0; i < capacity; i++) {
+			KeyChainElement element = table[i];
+			while (element != null) {
+				res.append("\n\t").append(element.key).append(" = ").append(element.value);
+				element = element.next;
+			}
+		}
+		res.append("]");
+		return res.toString();
 	}
 
 	private static class KeyChainElement {
@@ -72,7 +108,6 @@ public class ChainedHashTable implements HashTable {
 			this.key = key;
 			this.value = value;
 		}
-
 	}
 
 }

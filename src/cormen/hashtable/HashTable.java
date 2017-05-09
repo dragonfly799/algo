@@ -1,6 +1,7 @@
 package cormen.hashtable;
 
 public interface HashTable {
+	int capacity();
 
 	void put(int key, int value);
 
