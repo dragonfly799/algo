@@ -8,8 +8,6 @@ public abstract class OpenAddressHashTable implements HashTable {
 	private Element[] table;
 	private int p;
 
-	private long s = (int) (((Math.sqrt(5) - 1) / 2) * (1L << 32));
-
 	protected OpenAddressHashTable(int capacity) {
 		int p = 0;
 		while (1 << p < capacity) {
@@ -80,9 +78,8 @@ public abstract class OpenAddressHashTable implements HashTable {
 
 	protected abstract int hashCode(long key, int probe);
 
-	protected int h(int key) {
-		int r0 = (int) ((key * s) & 0xffffffffL);
-		return r0 >>> (32 - p);
+	protected long h(int key) {
+		return HashUtils.murmur3(key);
 	}
 
 	@Override

@@ -8,7 +8,6 @@ public class ChainedHashTable implements HashTable {
 	private int capacity;
 	private int p;
 
-	private long s = (int) (((Math.sqrt(5) - 1) / 2) * (1L << 32));
 
 	public ChainedHashTable(int capacity) {
 		int p = 0;
@@ -81,8 +80,7 @@ public class ChainedHashTable implements HashTable {
 	}
 
 	private int hashCode(int key) {
-		int r0 = (int) ((key * s) & 0xffffffffL);
-		return r0 >>> (32 - p);
+		return (int) (HashUtils.murmur3(key) % capacity);
 	}
 
 	@Override
