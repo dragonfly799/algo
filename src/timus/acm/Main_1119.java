@@ -4,47 +4,74 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StreamTokenizer;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main_1119 {
 
-    private static int n;
-    private static int m;
-    private static int[][] diagonals;
+    private static int maxDiagonals;
 
     public static void main(String[] args) throws IOException {
         StreamTokenizer in = new StreamTokenizer(new BufferedReader(new InputStreamReader(System.in)));
-        n = readInt(in);
-        m = readInt(in);
+        int n = readInt(in);
+        int m = readInt(in);
         int k = readInt(in);
 
-        diagonals = new int[n + 1][m + 1];
+        Node[] diagonals = new Node[k];
 
-        for (; k > 0; k--) {
-            diagonals[readInt(in)][readInt(in)] = 1;
+        for (int i = 0; i < k; i++) {
+            Node node = new Node(readInt(in), readInt(in));
+            diagonals[i] = node;
+            for (int j = 0; j < i; j++) {
+                link(diagonals[j], node);
+            }
         }
 
-        calc();
-        long path = Math.round((m + n + (Math.sqrt(2) - 2) * diagonals[n][m]) * 100);
+        for (Node node : diagonals) {
+            if (node.parents == 0) {
+                calc(node, 1);
+            }
+        }
+
+        long path = Math.round((m + n + maxDiagonals * (Math.sqrt(2) - 2)) * 100);
         System.out.println(path);
     }
 
-    private static void calc() {
-        for (int i = 1; i <= n; i++) {
-            for (int j = 1; j <= m; j++) {
-                int res = diagonals[i][j];
-                if (res == 1) {
-                    res += diagonals[i - 1][j - 1];
-                }
-                res = Math.max(res, diagonals[i - 1][j]);
-                res = Math.max(res, diagonals[i][j - 1]);
-
-                diagonals[i][j] = res;
+    private static void calc(Node node, int path) {
+        if (path > node.path) {
+            node.path = path;
+            maxDiagonals = Math.max(maxDiagonals, path);
+            for (Node child : node.children) {
+                calc(child, path + 1);
             }
+        }
+    }
+
+    private static void link(Node node1, Node node2) {
+        if (node1.x < node2.x && node1.y < node2.y) {
+            node1.children.add(node2);
+            node2.parents++;
+        } else if (node2.x < node1.x && node2.y < node1.y) {
+            node2.children.add(node1);
+            node1.parents++;
         }
     }
 
     private static int readInt(StreamTokenizer in) throws IOException {
         in.nextToken();
         return (int) in.nval;
+    }
+
+    private static class Node {
+        int x;
+        int y;
+        int parents;
+        int path;
+        List<Node> children = new ArrayList<>();
+
+        Node(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
     }
 }
