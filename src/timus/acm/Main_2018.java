@@ -31,15 +31,8 @@ public class Main_2018 {
 
     private static long calc() {
         long res = 2;
-        for (int i = 2; i <= n; i++) {
-            res *= 2;
-            if (i > a) {
-                res -= cache2[i - 1 - a];
-            }
-            if (i > b) {
-                res -= cache1[i - 1 - b];
-            }
-            res %= MOD;
+        for (int i = 1; i < n; i++) {
+            res = (res * 2 - canNotAdd1(i) - canNotAdd2(i)) % MOD;
             if (res < 0) {
                 res += MOD;
             }
@@ -47,21 +40,41 @@ public class Main_2018 {
         return res;
     }
 
+    private static long canNotAdd1(int n) {
+        if (n < a) {
+            return 0;
+        }
+        if (n == a) {
+            return 1;
+        }
+        return (cache2[n - a] - cache2[n - a - 1]);
+    }
+
+    private static long canNotAdd2(int n) {
+        if (n < b) {
+            return 0;
+        }
+        if (n == b) {
+            return 1;
+        }
+        return (cache1[n - b] - cache1[n - b - 1]);
+    }
+
     private static void calcCaches() {
         cache1[0] = 1;
         cache2[0] = 1;
         for (int i = 1; i < n; i++) {
-            int sum = 0;
-            for (int j = 1; j <= a && j <= i; j++) {
-                sum = (sum + cache2[i - j]) % MOD;
+            int sum = cache2[i - 1];
+            if (i > a) {
+                sum = (sum - cache2[i - a - 1]) % MOD;
             }
-            cache1[i] = sum;
+            cache1[i] = (cache1[i - 1] + sum) % MOD;
 
-            sum = 0;
-            for (int j = 1; j <= b && j <= i; j++) {
-                sum = (sum + cache1[i - j]) % MOD;
+            sum = cache1[i - 1];
+            if (i > b) {
+                sum = (sum - cache1[i - b - 1]) % MOD;
             }
-            cache2[i] = sum;
+            cache2[i] = (cache2[i - 1] + sum) % MOD;
         }
     }
 
