@@ -1,7 +1,5 @@
 package leetcode;
 
-import utils.StreamUtils;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,11 +10,11 @@ public class Main_SearchRange {
 
 	public static void main(String[] args) throws IOException {
 		StreamTokenizer tokenizer = new StreamTokenizer(new BufferedReader(new InputStreamReader(System.in)));
-		int size = StreamUtils.readInt(tokenizer);
-		int[] array = StreamUtils.readArray(size, tokenizer);
+		int size = readInt(tokenizer);
+		int[] array = readArray(size, tokenizer);
 
 		while (true) {
-			int num = StreamUtils.readInt(tokenizer);
+			int num = readInt(tokenizer);
 			System.out.println(Arrays.toString(searchRange(array, num)));
 		}
 	}
@@ -73,4 +71,18 @@ public class Main_SearchRange {
 			}
 		}
 	}
+
+	private static int readInt(StreamTokenizer tokenizer) throws IOException {
+		tokenizer.nextToken();
+		return (int) tokenizer.nval;
+	}
+
+	private static int[] readArray(int size, StreamTokenizer tokenizer) throws IOException {
+		int[] result = new int[size];
+		for (int i = 0; i < size; i++) {
+			result[i] = readInt(tokenizer);
+		}
+		return result;
+	}
+
 }

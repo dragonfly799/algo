@@ -1,7 +1,5 @@
 package timus.acm;
 
-import utils.StreamUtils;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,7 +14,7 @@ public class Main_1082_Program {
 		c = 0;
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-		A = StreamUtils.readArray(N, new StreamTokenizer(reader));
+		A = readArray(N, new StreamTokenizer(reader));
 
 		Q(0, N - 1);
 		if (c == (N * N + 3 * N - 4) / 2) {
@@ -57,6 +55,19 @@ public class Main_1082_Program {
 			Q(l, n);
 			Q((n + 1), r);
 		}
+	}
+
+	private static int readInt(StreamTokenizer tokenizer) throws IOException {
+		tokenizer.nextToken();
+		return (int) tokenizer.nval;
+	}
+
+	private static int[] readArray(int size, StreamTokenizer tokenizer) throws IOException {
+		int[] result = new int[size];
+		for (int i = 0; i < size; i++) {
+			result[i] = readInt(tokenizer);
+		}
+		return result;
 	}
 
 }

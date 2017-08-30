@@ -1,7 +1,5 @@
 package timus.acm;
 
-import utils.StreamUtils;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,7 +16,7 @@ public class Main_1313 {
 
 		int size = Integer.valueOf(reader.readLine());
 
-		int[][] matrix = StreamUtils.readSquareMatrix(size, new StreamTokenizer(reader));
+		int[][] matrix = readSquareMatrix(size, new StreamTokenizer(reader));
 
 		for (int i = 0; i < size; i++) {
 			for (int j = i; j >= 0; j--) {
@@ -30,6 +28,22 @@ public class Main_1313 {
 				System.out.print(matrix[j][size - j + i - 1] + " ");
 			}
 		}
+	}
+
+	private static int readInt(StreamTokenizer tokenizer) throws IOException {
+		tokenizer.nextToken();
+		return (int) tokenizer.nval;
+	}
+
+	private static int[][] readSquareMatrix(int size, StreamTokenizer tokenizer) throws IOException {
+		int[][] matrix = new int[size][];
+		for (int i = 0; i < size; i++) {
+			matrix[i] = new int[size];
+			for (int j = 0; j < size; j++) {
+				matrix[i][j] = readInt(tokenizer);
+			}
+		}
+		return matrix;
 	}
 
 }
